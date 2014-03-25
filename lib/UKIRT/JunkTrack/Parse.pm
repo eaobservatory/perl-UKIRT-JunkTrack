@@ -14,8 +14,6 @@ use IO::File;
 use base 'Exporter';
 our @EXPORT_OK = qw/parse_file/;
 
-use Data::Dumper;
-
 =head1 SUBROUTINES
 
 =over 4
