@@ -1,0 +1,74 @@
+#!/usr/bin/env perl
+
+=head1 NAME
+
+observe_junk -- observe space junk from NASA tracking file
+
+=head1 SYNOPSIS
+
+    observe_junk --data data.txt --msb msb.xml --duration DURATION
+
+Where DURATION is the duration of each observation in the file in seconds.
+
+=cut
+
+use strict;
+
+use Getopt::Long;
+
+use DRAMA;
+use Queue::Constants;
+
+use UKIRT::JunkTrack;
+
+# Handle command line options.
+my ($data_filename, $msb_filename, $duration);
+
+GetOptions(
+    'data=s'        => \$data_filename,
+    'msb=s'         => \$msb_filename,
+    'duration=i'    => \$duration,
+);
+
+die 'Data file not specified' unless defined $data_filename;
+die 'MSB file not specified' unless defined $msb_filename;
+die 'Observation duration not specified' unless defined $duration;
+
+die "Data file $data_filename does not exist" unless -e $data_filename;
+die "MSB file $msb_filename does not exist" unless -e $msb_filename;
+
+# Initialize DRAMA.
+DPerlInit('JUNKTRACK');
+
+# Set up space junk tracker object.
+my $tracker = new UKIRT::JunkTrack(
+        data => $data_filename,
+        msb => $msb_filename,
+        duration => $duration,
+    );
+
+# Start first observation.
+$tracker->observe();
+
+# Set up monitor.
+my %MON;
+monitor('OCSQUEUE', 'START', 'ALERT', {
+    -monitorvar => \%MON,
+    -cvtsub => \&my_cb
+});
+
+# Handle DRAMA events.
+while (1) {
+    DoDramaEvents();
+}
+
+# If the queue becomes empty, start another observation.
+sub my_cb {
+    my ($p, $v) = @_;
+
+    print "DRAMA monitor received: $p = $v\n";
+
+    if ($p eq 'ALERT' and $v == Queue::Constants::QSTATE__EMPTY) {
+        $tracker->observe();
+    }
+}
