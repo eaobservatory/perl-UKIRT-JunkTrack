@@ -22,7 +22,7 @@ Constructs an object used to model the position of a piece of space junk.
 When the object is constructed, the position records will be read from the
 given file and stored in the object.
 
-    my $jt = new UKIRT::JunkTrack::Model($filename);
+    my $model = new UKIRT::JunkTrack::Model($filename);
 
 =cut
 
@@ -47,7 +47,7 @@ interpolation is performed between the records before and after the datetime.
 An error is raised if the specified datetime is outside the range described by
 the available records.
 
-    my ($ra, $dec) = $jt->get_coords($dt);
+    my ($ra, $dec) = $model->get_coords($dt);
 
 =cut
 
