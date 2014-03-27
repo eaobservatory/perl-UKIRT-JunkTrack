@@ -19,7 +19,7 @@ our @EXPORT_OK = qw/translate/;
 
 Translate the given XML file.
 
-    $queue_file = translate($filename, $output_directory);
+    $queue_file = translate($filename);
 
 =cut
 
@@ -27,9 +27,8 @@ our $TRANSLATOR = '/jac_sw/omp/QT/bin/UkirtTranslator.csh';
 
 sub translate {
     my $filename = shift;
-    my $outdir = shift;
 
-    open XR, '-|', "$TRANSLATOR -queue -i $filename -o $outdir";
+    open XR, '-|', "$TRANSLATOR -queue -i $filename";
 
     my $queue = undef;
 

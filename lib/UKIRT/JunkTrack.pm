@@ -35,9 +35,6 @@ our $TIME_TO_START = new DateTime::Duration(seconds => 1);
 # Directory in which to write edited MSBs.
 our $MSB_DIR = '/jac_sw/itsroot/nasaFiles/edited';
 
-# Directory into which to translate MSBs.
-our $TRANS_DIR = '/jac_sw/itsroot/nasaFiles/translated';
-
 =head1 METHODS
 
 =over 4
@@ -96,9 +93,9 @@ sub observe {
     edit_xml($self->{'msb'}, $filename_out, $self->{'model'}, $dt_obs,
              $self->{'duration'});
 
-    print STDERR "Translating XML $filename_out file into $TRANS_DIR\n";
+    print STDERR "Translating XML $filename_out file\n";
 
-    my $queue_file = translate($filename_out, $TRANS_DIR);
+    my $queue_file = translate($filename_out);
 
     print STDERR "Loading queue file $queue_file\n";
 
