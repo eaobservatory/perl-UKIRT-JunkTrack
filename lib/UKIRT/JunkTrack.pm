@@ -57,10 +57,16 @@ sub new {
     die 'MSB XML file not specified' unless exists $opt{'msb'};
     die 'Observation duration not specified' unless exists $opt{'duration'};
 
+    # Use first part of filename as the target name.  Requested by
+    # THK 3/26/14.
+    my (undef, undef, $data_basename) = File::Spec->splitpath($opt{'data'});
+    my ($target, undef) = split /\./, $data_basename, 2;
+
     my $self = {
         model => new UKIRT::JunkTrack::Model($opt{'data'}),
         msb => $opt{'msb'},
         duration => $opt{'duration'},
+        target => $target,
     };
 
     $class = ref($class) if ref($class);
@@ -91,7 +97,7 @@ sub observe {
     print STDERR "Editing XML for $dt_obs as $filename_out\n";
 
     edit_xml($self->{'msb'}, $filename_out, $self->{'model'}, $dt_obs,
-             $self->{'duration'});
+             $self->{'duration'}, $self->{'target'});
 
     print STDERR "Translating XML $filename_out file\n";
 

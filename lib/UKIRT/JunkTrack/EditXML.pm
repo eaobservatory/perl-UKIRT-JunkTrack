@@ -28,7 +28,11 @@ For the first observation, the model is queried at time C<$dt>,
 and after each observation, C<$obs_dur_sec> seconds are added to this
 DateTime.
 
-    edit_xml($filename_in, $filename_out, $model, $dt, $obs_dur_sec);
+    edit_xml($filename_in, $filename_out, $model, $dt,
+             $obs_dur_sec, $target_name);
+
+The target names in the XML file are also replaced with the specified
+target name.
 
 =cut
 
@@ -38,6 +42,7 @@ sub edit_xml {
     my $model = shift;
     my $dt = shift;
     my $obs_dur_sec = shift;
+    my $target_name = shift;
 
     my $r = new IO::File($filename_in, 'r');
     my $w = new IO::File($filename_out, 'w');
@@ -66,6 +71,11 @@ sub edit_xml {
         # C2?
         if ($line =~ /<c2/) {
             $line =~ s/<c2>.*<\/c2>/<c2>$c2<\/c2>/;
+        }
+
+        # Target name?
+        if ($line =~ /<targetName>/) {
+            $line =~ s/<targetName>.*<\/targetName>/<targetName>$target_name<\/targetName>/;
         }
 
         print $w $line;
