@@ -2,6 +2,13 @@
 
 UKIRT::JunkTrack::EditXML - Edit XML to insert new coordinates
 
+=head1 NOTE
+
+This module currently works by pattern-matching on the text serialization
+of the "OT" XML.  It is therefore somewhat dependent on the format in which
+the OT currently writes this.  Should this become a problem it would
+be possible to have this module use a full XML parser instead.
+
 =cut
 
 package UKIRT::JunkTrack::EditXML;
