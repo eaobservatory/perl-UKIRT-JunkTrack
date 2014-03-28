@@ -52,7 +52,10 @@ sub edit_xml {
     my $target_name = shift;
 
     my $r = new IO::File($filename_in, 'r');
+    die 'Failed to open template MSB XML file' unless defined $r;
+
     my $w = new IO::File($filename_out, 'w');
+    die 'Failed to open output edited MSB XML file' unless defined $w;
 
     my $c1 = undef;
     my $c2 = undef;
