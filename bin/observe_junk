@@ -54,7 +54,16 @@ $tracker->observe();
 my %MON;
 monitor('OCSQUEUE', 'START', 'ALERT', {
     -monitorvar => \%MON,
-    -cvtsub => \&my_cb
+    -cvtsub => \&my_cb,
+    -success => sub {
+        print STDERR "OCSQUEUE ALERT monitor started\n";
+    },
+    -complete => sub {
+        print STDERR "OCSQUEUE ALERT monitor complete\n";
+    },
+    -error => sub {
+        print STDERR "ERROR: OCSQUEUE ALERT monitor error\n";
+    },
 });
 
 # Handle DRAMA events.
@@ -66,7 +75,7 @@ while (1) {
 sub my_cb {
     my ($p, $v) = @_;
 
-    print "DRAMA monitor received: $p = $v\n";
+    print "OCSQUEUE ALERT MONITOR received $p = $v\n";
 
     if ($p eq 'ALERT' and $v == Queue::Constants::QSTATE__EMPTY) {
         $tracker->observe();

@@ -41,7 +41,17 @@ sub queue_load {
     my $arg = Arg->Create();
     $arg->PutString("Argument1", $queue_file, $status);
 
-    obeyw('OCSQUEUE', 'LOADQ', $arg);
+    obeyw('OCSQUEUE', 'LOADQ', $arg, {
+         -success => sub {
+            print STDERR "OCSQUEUE LOADQ successful\n";
+        },
+        -complete => sub {
+            print STDERR "OCSQUEUE LOADQ complete\n";
+        },
+        -error => sub {
+            print STDERR "ERROR: OCSQUEUE LOADQ error\n";
+        },
+    });
 }
 
 =item queue_start
@@ -53,7 +63,17 @@ Instructs the queue to start.
 =cut
 
 sub queue_start {
-    obeyw('OCSQUEUE', 'STARTQ');
+    obeyw('OCSQUEUE', 'STARTQ', {
+        -success => sub {
+            print STDERR "OCSQUEUE STARTQ successful\n";
+        },
+        -complete => sub {
+            print STDERR "OCSQUEUE STARTQ complete\n";
+        },
+        -error => sub {
+            print STDERR "ERROR: OCSQUEUE STARTQ error\n";
+        },
+    });
 }
 
 1;
