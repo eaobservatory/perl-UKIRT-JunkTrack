@@ -24,12 +24,11 @@ use UKIRT::JunkTrack::Queue qw/queue_load queue_start/;
 
 use strict;
 
-# Time taken to prepare the observation, place it on the queue, and
-# start observing it.
+# Time taken to prepare the observation and place it on the queue.
 our $TIME_TO_PREPARE = new DateTime::Duration(seconds => 10);
 
 # Time taken between instructing the queue to start and the observation
-# actually beginning.  (Also included in TIME_TO_PREPARE.)
+# actually beginning.  (No longer included in TIME_TO_PREPARE.)
 our $TIME_TO_START = new DateTime::Duration(seconds => 1);
 
 # Directory in which to write edited MSBs.
@@ -87,8 +86,8 @@ sub observe {
     my $self = shift;
 
     my $dt_now = DateTime->now(time_zone => 'UTC');
-    my $dt_obs = $dt_now + $TIME_TO_PREPARE;
-    my $dt_start = $dt_obs - $TIME_TO_START;
+    my $dt_start = $dt_now + $TIME_TO_PREPARE;
+    my $dt_obs = $dt_start + $TIME_TO_START;
 
     my (undef, undef, $root) = File::Spec->splitpath($self->{'msb'});
     my $filename_out = File::Spec->catfile($MSB_DIR,
