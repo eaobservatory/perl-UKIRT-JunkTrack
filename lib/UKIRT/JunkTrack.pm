@@ -29,7 +29,7 @@ our $TIME_TO_PREPARE = new DateTime::Duration(seconds => 10);
 
 # Time taken between instructing the queue to start and the observation
 # actually beginning.  (No longer included in TIME_TO_PREPARE.)
-our $TIME_TO_START = new DateTime::Duration(seconds => 1);
+our $TIME_TO_START = new DateTime::Duration(seconds => 5);
 
 # Directory in which to write edited MSBs.
 our $MSB_DIR = '/jac_sw/itsroot/nasaFiles/edited';
