@@ -17,8 +17,7 @@ use strict;
 
 use IO::File;
 
-use Astro::Coords::Angle;
-use Astro::Coords::Angle::Hour;
+use Astro::Coords;
 
 use base 'Exporter';
 our @EXPORT_OK = qw/edit_xml/;
@@ -40,6 +39,10 @@ DateTime.
 
 The target names in the XML file are also replaced with the specified
 target name.
+
+The coordinates given by the model are assumed to be for the current date
+rather than J2000.  Therefore the given datetime is used to form a
+coordinate system "type" for Astro::Coords of the form J2014.268.
 
 =cut
 
@@ -63,11 +66,20 @@ sub edit_xml {
     while (my $line = <$r>) {
         # Start of target coordinates?
         if ($line =~ /<spherSystem/) {
+            my $type  = sprintf('J%.3f', $dt->year() +
+                ($dt->day_of_year() / ($dt->is_leap_year() ? 366.0 : 365.0)));
             my ($ra, $dec) = $model->get_coords($dt);
             $dt->add(seconds => $obs_dur_sec);
 
-            $ra = new Astro::Coords::Angle::Hour($ra, units => 'deg');
-            $dec = new Astro::Coords::Angle($dec, units => 'deg');
+            my $c = new Astro::Coords(
+                name => "Target",
+                ra   => $ra,
+                dec  => $dec,
+                type => $type,
+                units=> 'deg',
+            );
+
+            ($ra, $dec) = $c->radec2000();
 
             $c1 = $ra->string();
             $c2 = $dec->string();
