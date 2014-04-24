@@ -8,7 +8,24 @@ observe_junk -- observe space junk from NASA tracking file
 
     observe_junk --data data.txt --msb msb.xml --duration DURATION
 
-Where DURATION is the duration of each observation in the file in seconds.
+=head1 OPTIONS
+
+=over 4
+
+=item --data
+
+The file containing the tracking information.
+
+=item --msb
+
+The file containing the MSB to observe.
+
+=item --duration DURATION
+
+Specify the duration of each observation in the file in seconds.
+(They must all be the same length.)
+
+=back
 
 =cut
 
