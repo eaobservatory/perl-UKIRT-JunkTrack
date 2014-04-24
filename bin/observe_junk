@@ -6,7 +6,7 @@ observe_junk -- observe space junk from NASA tracking file
 
 =head1 SYNOPSIS
 
-    observe_junk --data data.txt --msb msb.xml --duration DURATION
+    observe_junk --data data.txt --msb msb.xml --duration DURATION [--cycles N]
 
 =head1 OPTIONS
 
@@ -25,6 +25,11 @@ The file containing the MSB to observe.
 Specify the duration of each observation in the file in seconds.
 (They must all be the same length.)
 
+=item --cycles N
+
+The number of times to observe the MSB.   The script will exit
+after the Nth observation is complete.
+
 =back
 
 =cut
@@ -39,12 +44,13 @@ use Queue::Constants;
 use UKIRT::JunkTrack;
 
 # Handle command line options.
-my ($data_filename, $msb_filename, $duration);
+my ($data_filename, $msb_filename, $duration, $cycles);
 
 GetOptions(
     'data=s'        => \$data_filename,
     'msb=s'         => \$msb_filename,
     'duration=i'    => \$duration,
+    'cycles=i'      => \$cycles,
 );
 
 die 'Data file not specified' unless defined $data_filename;
@@ -66,6 +72,7 @@ my $tracker = new UKIRT::JunkTrack(
 
 # Start first observation.
 $tracker->observe();
+my $i = 1; # Set counter to one observation done.
 
 # Set up monitor.
 my %MON;
@@ -84,9 +91,8 @@ monitor('OCSQUEUE', 'START', 'ALERT', {
 });
 
 # Handle DRAMA events.
-while (1) {
-    DoDramaEvents();
-}
+my $status = new DRAMA::Status();
+Dits::MainLoop($status);
 
 # If the queue becomes empty, start another observation.
 sub my_cb {
@@ -95,6 +101,15 @@ sub my_cb {
     print "OCSQUEUE ALERT MONITOR received $p = $v\n";
 
     if ($p eq 'ALERT' and $v == Queue::Constants::QSTATE__EMPTY) {
-        $tracker->observe();
+        if ((not defined $cycles) or ($i < $cycles)) {
+            $tracker->observe();
+            $i ++;
+        }
+        else {
+            # A sufficient number of cycles has been observed, so
+            # exit now.
+            my $status = new DRAMA::Status();
+            Dits::PutRequest(Dits::REQ_EXIT, $status);
+        }
     }
 }
