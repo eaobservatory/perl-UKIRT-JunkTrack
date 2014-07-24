@@ -1,3 +1,19 @@
+# Copyright (C) 2014 Science and Technology Facilities Council.
+# All Rights Reserved.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 =head1 NAME
 
 UKIRT::JunkTrack - Utility for observing space junk
@@ -23,6 +39,8 @@ use UKIRT::JunkTrack::Translate qw/translate/;
 use UKIRT::JunkTrack::Queue qw/queue_load queue_start/;
 
 use strict;
+
+our $VERSION = '0.001';
 
 # Time taken to prepare the observation and place it on the queue.
 our $TIME_TO_PREPARE = new DateTime::Duration(seconds => 10);

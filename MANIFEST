@@ -1,0 +1,13 @@
+bin/observe_junk
+Build.PL
+lib/UKIRT/JunkTrack.pm
+lib/UKIRT/JunkTrack/EditXML.pm
+lib/UKIRT/JunkTrack/Model.pm
+lib/UKIRT/JunkTrack/Parse.pm
+lib/UKIRT/JunkTrack/Queue.pm
+lib/UKIRT/JunkTrack/Translate.pm
+MANIFEST
+README.txt
+t/1_compile.t
+META.yml
+META.json
